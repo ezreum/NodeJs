@@ -1,6 +1,9 @@
 require('./config/config');
 
+const mongoose = require('mongoose');
+
 const express = require('express');
+
 const app = express();
 const bodyParser = require('body-parser')
 
@@ -10,35 +13,24 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/usuarios', function (req, res) {
-  res.json('get Usuario');
-})
- // para crear nuevas instancias
-app.post('/usuarios', function (req, res) {
+app.use( require('./routes/usuario') );
+// , { useNewUrlParser: true, useUnifiedTopology: true }
+mongoose.set('useNewUrlParser', true);
+      mongoose.set('useFindAndModify', false);
+      mongoose.set('useCreateIndex', true);
+      mongoose.set('useUnifiedTopology', true);
+// en local      mongoose.connect('mongodb://localhost:27017/cafe', (err, respuesta) =>{
+  mongoose.connect(process.env.URLDB, (err, respuesta) =>{
 
-    let body = req.body;
+    if (err) {
+      throw err;
+    } else {
+      
+      console.log('Base online');
+    }
 
-    body.nombre===undefined?res.status(400).json({
-        ok: false,
-        mensaje: 'el nombre es necesario'
-    }):'';
+  });
 
-    res.json({
-        persona: body});
-  })
-
-  //para actualizar
-app.put('/usuarios/:id', function (req, res) {
-    let id = req.params.id;
-    res.json({
-        id
-    });
-  })
- 
-  //para eliminar registro
-  app.delete('/usuarios', function (req, res) {
-    res.json('post Usuario');
-  })
 
 app.listen(process.env.PORT, () => {
     console.log('escuchando el puerto '+process.env.PORT);
