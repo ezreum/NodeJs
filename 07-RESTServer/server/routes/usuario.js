@@ -5,10 +5,11 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
+const { verificarToken, verificarRol } = require('../middleware/authentication');
 
 const app = express();
 
-app.get('/usuarios', function (req, res) {
+app.get('/usuarios', verificarToken, function (req, res) {
   
   let desde = req.query.desde || 0;
   desde= Number(desde);
@@ -41,7 +42,7 @@ app.get('/usuarios', function (req, res) {
   });
   });
    // para crear nuevas instancias
-app.post('/usuarios', function (req, res) {
+app.post('/usuarios', [verificarToken,verificarRol], function (req, res) {
   
       let body = req.body;
 
@@ -72,7 +73,7 @@ app.post('/usuarios', function (req, res) {
 });
   
     //para actualizar
-app.put('/usuarios/:id', function (req, res) {
+app.put('/usuarios/:id', [verificarToken,verificarRol], function (req, res) {
       
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre','email','rol','estado','img'] );
@@ -85,7 +86,9 @@ app.put('/usuarios/:id', function (req, res) {
       if (err) {
         res.status(400).json({
             ok: false,
-            err
+            err: {
+              message: 'usuario no encontrado'
+            }
         })
       } else {
         // usuarioDB.password= null;
@@ -104,7 +107,7 @@ app.put('/usuarios/:id', function (req, res) {
     
    
     //para eliminar registro
-app.delete('/usuarios/:id', function (req, res) {
+app.delete('/usuarios/:id', [verificarToken,verificarRol], function (req, res) {
     
     let id = req.params.id;
 

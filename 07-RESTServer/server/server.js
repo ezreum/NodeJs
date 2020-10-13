@@ -13,7 +13,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use( require('./routes/usuario') );
+//config global de rutas
+app.use( require('./routes/index') );
+
 // , { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.set('useNewUrlParser', true);
       mongoose.set('useFindAndModify', false);
