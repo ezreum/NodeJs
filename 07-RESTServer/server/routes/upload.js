@@ -60,7 +60,7 @@ app.put('/upload/:tipo/:id', (req, res) =>{
                     err
                 })
             } else {
-                tipo=='usuario'?imagenUsuario(id, res, nombreArchivo):
+                tipo=='usuarios'?imagenUsuario(id, res, nombreArchivo):
                 imagenProducto(id, res, nombreArchivo);
 
             }
