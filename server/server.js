@@ -1,24 +1,20 @@
 const express = require('express');
-const socketIO=require('socket.io');
-const http= require('http');
+const socketIO = require('socket.io');
+const http = require('http');
 
 const path = require('path');
 
 const app = express();
 let server = http.createServer(app);
 
-
 const publicPath = path.resolve(__dirname, '../public');
 const port = process.env.PORT || 3000;
-
+console.log(publicPath);
 app.use(express.static(publicPath));
 
-//está es la comunicación del back-end
+// IO = esta es la comunicacion del backend
 module.exports.io = socketIO(server);
 require('./sockets/socket');
-//briefing: on es para escuchar y emit para emitir
-
-
 
 server.listen(port, (err) => {
 
